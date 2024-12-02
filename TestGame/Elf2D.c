@@ -70,6 +70,50 @@ void Elf2DDrawLine(int x1, int y1, int x2, int y2, char* Buffer, int width, int 
     }
 }
 
+void Elf2DDrawLine2(float x1, float y1, float x2, float y2, char* Buffer, int width, int height)
+{
+    // 좌표를 int로 변환 (화면 크기에 맞게)
+    int ix1 = (int)x1, iy1 = (int)y1;
+    int ix2 = (int)x2, iy2 = (int)y2;
+
+    int dx = abs(ix2 - ix1);
+    int dy = abs(iy2 - iy1);
+    int sx = (ix1 < ix2) ? 1 : -1;
+    int sy = (iy1 < iy2) ? 1 : -1;
+    int err = dx - dy;
+
+    while (1) {
+        // 범위 내에서만 점을 찍기 (화면 경계를 벗어나지 않도록 처리)
+        if (ix1 >= 0 && ix1 < width && iy1 >= 0 && iy1 < height)
+        {
+            // 각 픽셀에 하나의 문자만 표시
+            int index = iy1 * width + ix1;  // 단일 문자 공간 인덱스
+            Buffer[index] = '*';  // '*' 문자
+        }
+
+        // 목표 점에 도달하면 종료
+        if (ix1 == ix2 && iy1 == iy2)
+            break;
+
+        // Bresenham 알고리즘에 의한 직선 그리기
+        int e2 = err * 2;
+        if (e2 > -dy)
+        {
+            err -= dy;
+            ix1 += sx;
+        }
+        if (e2 < dx)
+        {
+            err += dx;
+            iy1 += sy;
+        }
+    }
+}
+
+
+
+
+
 
 void Elf2DSleep(int ms)
 {

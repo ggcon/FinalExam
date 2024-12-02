@@ -27,13 +27,7 @@
     <ClCompile Include="ElfTime.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="GameDev.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="main.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="TestBuffer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

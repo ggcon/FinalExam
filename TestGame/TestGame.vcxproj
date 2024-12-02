@@ -23,9 +23,7 @@
     <ClCompile Include="ElfMath.c" />
     <ClCompile Include="ElfObject.c" />
     <ClCompile Include="ElfTime.c" />
-    <ClCompile Include="GameDev.cpp" />
     <ClCompile Include="main.c" />
-    <ClCompile Include="TestBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Elf2D.h" />

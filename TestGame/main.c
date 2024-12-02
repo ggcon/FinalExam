@@ -2,9 +2,28 @@
 #include "Elf2D.h"
 #include "ElfTime.h"
 #include "ElfObject.h"
+#include "stdio.h"
+#include <stdlib.h>
+#include <windows.h>
 
-#define WIDTH 60
-#define HEIGHT 25
+#define WIDTH 40
+#define HEIGHT 24
+
+char screenBuffer[WIDTH * HEIGHT * 2 + 1]; // null 문자를 위해 +1 추가
+
+// 스크린 버퍼 초기화
+void bufferClear() {
+    for (int i = 0; i < WIDTH * HEIGHT * 2; i++) {
+        screenBuffer[i] = ' '; // 초기값은 공백 문자로 채움
+    }
+    screenBuffer[WIDTH * HEIGHT * 2] = '\0'; // 문자열 끝을 null로 설정
+
+    //커서 숨기기
+    CONSOLE_CURSOR_INFO cursorInfo;
+    GetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+    cursorInfo.bVisible = FALSE;  // 커서를 숨김
+    SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+}
 
 void Initialize(GameObject_Line* obj, int objNum)
 {
@@ -22,12 +41,12 @@ void Initialize(GameObject_Line* obj, int objNum)
         obj[i].Line[0].x = 0;
         obj[i].Line[0].y = 0;
 
-        obj[i].Line[1].x = 3;
-        obj[i].Line[1].y = 0;
+        obj[i].Line[1].x = WIDTH;
+        obj[i].Line[1].y = HEIGHT ;
     }
 
-    obj[1].Rotation = 30;
-    obj[2].Rotation = 30;
+    obj[1].Rotation = 45;
+    obj[2].Rotation = 0;
 
     //화면 출력 심볼 입력
     obj[0].Symbol = "11";
@@ -93,23 +112,26 @@ void Render(GameObject_Line* obj, int objNum, char* Buf, int width, int height)
         lineA = multiply_matrix_vector(world, lineA);  // 점과 회전 행렬 곱셈 (Matrix3x3 * Vector3)
         lineB = multiply_matrix_vector(world, lineB);  // 점과 회전 행렬 곱셈 (Matrix3x3 * Vector3)
 
-        Elf2DDrawLine((int)lineA.x, (int)lineA.y, (int)lineB.x, (int)lineB.y, Buf, width, height);
+        
+        Elf2DDrawLine2((float)lineA.x, (float)lineA.y, (float)lineB.x, (float)lineB.y, Buf, width, height);
+
 }
 
 
 // 게임 루프
 int main() {
-    int fps = 60;
+    int fps = 30;
     double frameTime = 1000.0 / fps;
 
     // 전역 변수로 스크린 버퍼 선언
-    char screenBuffer[(WIDTH + 1) * HEIGHT];
-    int screenWidth = WIDTH;
+    char screenBuffer[WIDTH * HEIGHT + 1];
+    int screenWidth = WIDTH ;
     int screenHeight = HEIGHT;
 
     GameObject_Line LineObj[3];
 
     // 게임 초기화
+    bufferClear();
     Initialize(LineObj, 3);
     
     Elf2DInitScreen();
